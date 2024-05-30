@@ -4,42 +4,44 @@
 
 // 00:40 시작
 // 01:10 끝 (완료x)
+// 09:10 시작
+// 09:30 끝
 
 using namespace std;
 
 int solution(string s) {
-  int answer = 0;
-  int count = 0;
+  int answer = s.length();
+  int count = 1;
   string zip = "";
   string result = "";
 
-  for (int i = 0; i < s.length() / 2; i++) {
-    cout << "i: " << i << endl;
+  for (int i = 1; i < s.length() / 2 + 1; i++) {
     zip = s.substr(0, i);
-    if (zip == "") continue;
-    cout << "zip: " << zip << endl;
 
-    count = 1;
-    for (int j = i + count; j < s.length(); j++) {
+    for (int j = i; j < s.length(); j += i) {
       if (s.substr(j, i) == zip) {
         count++;
-        cout << "substr: " << s.substr(j, i) << endl;
-        cout << "count: " << count << endl;
+      } else {
+        if (count > 1) {
+          result += to_string(count);
+        }
+        result += zip;  // 중복되는 부분 밖으로 빼줌 (로직변경 x)
+        zip = s.substr(j, i);
+        count = 1;
       }
     }
 
-    if (count > 1) {
+    if (count > 1) {  // 추가된부분
       result += to_string(count);
-      result += zip;
-      i += count;
     }
-    cout << result << endl;
+    result += zip;
+
+    if (result.length() < answer) {
+      answer = result.length();
+    }
+    result.clear();
+    count = 1;  // 추가된부분 (98점 -> 100점)
   }
 
   return answer;
-}
-
-int main() {
-  string s = "aabbaccc";
-  cout << solution(s) << endl;
 }
